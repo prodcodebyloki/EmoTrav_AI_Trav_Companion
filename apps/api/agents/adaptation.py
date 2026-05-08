@@ -1,9 +1,9 @@
-import google.generativeai as genai
 import json
+from google import genai
 from config import GOOGLE_API_KEY
 from models.request import AdaptationRequest
 
-genai.configure(api_key=GOOGLE_API_KEY)
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
 async def run_adaptation(request: AdaptationRequest) -> dict:
     prompt = f"""
@@ -14,7 +14,7 @@ Detail: {request.trigger_detail}
 Target day: {request.target_day or 'all affected'}
 User message: {request.user_message or 'n/a'}
 
-Return ONLY a JSON AdaptationDiff:
+Return ONLY a JSON AdaptationDiff, no prose, no markdown:
 {{
   "trigger": "{request.trigger}",
   "trigger_detail": "{request.trigger_detail}",
@@ -22,14 +22,14 @@ Return ONLY a JSON AdaptationDiff:
   "summary": "One-line summary of what changed",
   "changes": []
 }}
-
-If no change needed, return empty changes array with explanation in summary.
 """
 
-    model = genai.GenerativeModel("gemini-2.0-flash-001")
-    response = await model.generate_content_async(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash-lite",
+        contents=prompt,
+    )
     text = response.text.strip()
-    if text.startswith("```"):
+    if "```" in text:
         text = text.split("```")[1]
         if text.startswith("json"):
             text = text[4:]

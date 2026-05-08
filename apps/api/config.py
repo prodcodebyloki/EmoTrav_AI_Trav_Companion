@@ -46,3 +46,23 @@ ACCOMMODATION_TIERS = {
     "Melbourne":   {"budget": 40, "mid": 110, "premium": 240},
     "Dubai":       {"budget": 80, "mid": 180, "premium": 400},
 }
+
+ANCHOR_COUNTS = {1: 6, 2: 5, 3: 3, 4: 2, 5: 1}
+
+SPONTANEITY_BLOCKS = {
+    1: "Plan every hour. Use specific named venues. No open slots.",
+    2: "Plan morning, afternoon, evening anchors with named venues. Soft time windows.",
+    3: "Mix 3 named anchor experiences per day with open neighbourhood exploration zones.",
+    4: "Max 2 anchor experiences per day. Rest as neighbourhood moods, not venues.",
+    5: "Day theme and zone only. No venue names. Sensory descriptions only.",
+}
+
+VIBE_BLOCKS = {
+    "romantic":    "Intimate restaurants, sunset viewpoints, wine bars, slow walks. No chains, no crowds.",
+    "adventurous": "Street food, local transport, markets, things hard to find. No hotel restaurants.",
+    "healing":     "Parks, temples, spas, quiet cafés, bookshops, nature. Low crowds, gentle pace.",
+    "chaotic":     "Night markets, street food, crowded spots, rooftop bars. Alive and unpredictable.",
+    "social":      "Communal dining, live music, walking tours, neighbourhood bars. No solo-only spots.",
+    "slow":        "One neighbourhood only. Max 3 experiences. Long lunches. Nothing before 09:00.",
+    "creative":    "Street art, galleries, design shops, craft workshops. No chains, no generic sites.",
+}

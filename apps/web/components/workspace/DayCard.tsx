@@ -44,7 +44,22 @@ export default function DayCard({ day }: Props) {
             <li key={exp.id} className={styles.exp}>
               <span className={styles.expTime}>{exp.time_start}</span>
               <div className={styles.expBody}>
-                <span className={styles.expName}>{exp.name}</span>
+                <div className={styles.expNameRow}>
+                  <span className={styles.expName}>{exp.name}</span>
+                  <a
+                    href={
+                      exp.location?.lat && exp.location?.lng
+                        ? `https://www.google.com/maps/search/?api=1&query=${exp.location.lat},${exp.location.lng}`
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(exp.name)}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.mapLink}
+                    title="Open in Google Maps"
+                  >
+                    ↗ Maps
+                  </a>
+                </div>
                 <span className={styles.expMeta}>
                   {exp.duration_minutes}min · ${exp.estimated_cost_usd}
                 </span>

@@ -11,6 +11,8 @@ export default function WorkspacePage() {
   const router = useRouter();
   const { session_id, soft_inputs, hard_inputs, days, budget, stream_status, addDay, setBudget, setStreamStatus, setTrip } = useTripStore();
   const started = useRef(false);
+  const totalDays = hard_inputs.days ?? 4;
+  const nextDayNum = days.length + 1;
 
   useEffect(() => {
     if (started.current) return;
@@ -25,21 +27,25 @@ export default function WorkspacePage() {
   async function runStream() {
     setStreamStatus('streaming');
     try {
+      // Read fresh state at call time — avoids stale closure from before sessionStorage hydration
+      const s = useTripStore.getState();
+      const h = s.hard_inputs;
+      const soft = s.soft_inputs;
       const payload = {
-        session_id,
+        session_id: s.session_id,
         hard_inputs: {
           origin_city: 'Home',
-          destination_city: hard_inputs.destination_city,
-          budget_usd: hard_inputs.budget_usd ?? 1000,
-          days: hard_inputs.days ?? 4,
-          group_size: hard_inputs.group_size ?? 1,
-          transport: hard_inputs.transport ?? 'any',
+          destination_city: h.destination_city,
+          budget_usd: h.budget_usd ?? 1000,
+          days: h.days ?? 4,
+          group_size: h.group_size ?? 1,
+          transport: h.transport ?? 'any',
         },
         soft_inputs: {
-          vibe: soft_inputs.vibe,
-          energy_level: soft_inputs.energy_level ?? 'medium',
-          spontaneity: soft_inputs.spontaneity ?? 3,
-          social_preference: soft_inputs.social_preference ?? 'solo',
+          vibe: soft.vibe,
+          energy_level: soft.energy_level ?? 'medium',
+          spontaneity: soft.spontaneity ?? 3,
+          social_preference: soft.social_preference ?? 'solo',
         },
       };
 
@@ -71,15 +77,17 @@ export default function WorkspacePage() {
 
       <div className={styles.body}>
         <main className={styles.timeline}>
-          {days.length === 0 && stream_status === 'streaming' && (
-            <div className={styles.loading}>
-              <div className={styles.loadingDot} />
-              <p>Building your {soft_inputs.vibe} trip to {hard_inputs.destination_city}…</p>
-            </div>
-          )}
           {days.map((day) => (
             <DayCard key={day.day_number} day={day} />
           ))}
+          {stream_status === 'streaming' && days.length < totalDays && (
+            <div className={styles.generatingCard}>
+              <div className={styles.generatingSpinner} />
+              <span className={styles.generatingText}>
+                Day {nextDayNum}/{totalDays} is generating…
+              </span>
+            </div>
+          )}
           {stream_status === 'error' && (
             <div className={styles.errorState}>
               <p>Generation failed. <button onClick={runStream}>Retry</button></p>

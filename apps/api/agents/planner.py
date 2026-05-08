@@ -1,23 +1,10 @@
-import google.generativeai as genai
 import json
-from config import GOOGLE_API_KEY
-from models.request import TripRequest
+from google import genai
+from config import GOOGLE_API_KEY, ANCHOR_COUNTS, SPONTANEITY_BLOCKS
 
-genai.configure(api_key=GOOGLE_API_KEY)
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
-EMOTIONAL_THEMES = ["decompress", "exploration", "peak", "immersion", "wind-down", "spontaneous"]
-
-SPONTANEITY_BLOCKS = {
-    1: "Plan every hour. Use specific named venues. No open slots.",
-    2: "Plan morning, afternoon, evening anchors. Soft time windows.",
-    3: "Mix 3 anchors per day with open neighbourhood exploration zones.",
-    4: "Max 2 anchors per day. Rest as neighbourhood moods, not venues.",
-    5: "Day theme and zone only. No venue names. Sensory descriptions only.",
-}
-
-ANCHOR_COUNTS = {1: 6, 2: 5, 3: 3, 4: 2, 5: 1}
-
-async def build_day_skeletons(request: TripRequest) -> list[dict]:
+async def build_day_skeletons(request) -> list[dict]:
     hard = request.hard_inputs
     soft = request.soft_inputs
 
@@ -35,7 +22,7 @@ RULES:
 - anchor_count for spontaneity {soft.spontaneity}: {ANCHOR_COUNTS[soft.spontaneity]}
 - Spontaneity behaviour: {SPONTANEITY_BLOCKS[soft.spontaneity]}
 
-Return ONLY a JSON array, no prose:
+Return ONLY a JSON array, no prose, no markdown:
 [
   {{
     "day_number": 1,
@@ -48,10 +35,12 @@ Return ONLY a JSON array, no prose:
 ]
 """
 
-    model = genai.GenerativeModel("gemini-2.0-flash-001")
-    response = await model.generate_content_async(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash-lite",
+        contents=prompt,
+    )
     text = response.text.strip()
-    if text.startswith("```"):
+    if "```" in text:
         text = text.split("```")[1]
         if text.startswith("json"):
             text = text[4:]

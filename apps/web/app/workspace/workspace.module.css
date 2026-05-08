@@ -64,14 +64,14 @@
 .body {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 0;
-  max-width: 1280px;
+  grid-template-columns: minmax(0, 720px) 340px;
+  gap: var(--space-6);
+  max-width: 1120px;
   margin: 0 auto;
   width: 100%;
-  padding: var(--space-6);
-  gap: var(--space-6);
+  padding: var(--space-6) var(--space-6);
   align-items: start;
+  justify-content: center;
 }
 
 .timeline {
@@ -100,6 +100,43 @@
   border-radius: 50%;
   background: var(--color-dusk);
   animation: pulse 1s infinite;
+}
+
+.generatingCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6);
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--color-stone);
+  animation: slideUp var(--duration-normal) var(--ease-spring);
+}
+
+.generatingSpinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--color-stone);
+  border-top-color: var(--color-dusk);
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.generatingText {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-stone);
+  font-size: var(--text-body);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .errorState {
