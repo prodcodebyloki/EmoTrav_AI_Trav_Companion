@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTripStore } from '@/store';
 import VibeSelector from './VibeSelector';
@@ -15,7 +14,6 @@ const ENERGY_LEVELS = [
 export default function IntentForm() {
   const router = useRouter();
   const { soft_inputs, hard_inputs, setSoftInput, setHardInput, reset } = useTripStore();
-  const [step, setStep] = useState(1);
 
   const canProceed1 = soft_inputs.vibe && soft_inputs.energy_level;
   const canProceed2 = hard_inputs.destination_city && hard_inputs.days;

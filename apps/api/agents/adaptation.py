@@ -1,9 +1,5 @@
-import json
-from google import genai
-from config import GOOGLE_API_KEY
+from gemini import client, parse_gemini_json
 from models.request import AdaptationRequest
-
-client = genai.Client(api_key=GOOGLE_API_KEY)
 
 async def run_adaptation(request: AdaptationRequest) -> dict:
     prompt = f"""
@@ -24,13 +20,8 @@ Return ONLY a JSON AdaptationDiff, no prose, no markdown:
 }}
 """
 
-    response = client.models.generate_content(
+    response = await client.aio.models.generate_content(
         model="gemini-2.5-flash-lite",
         contents=prompt,
     )
-    text = response.text.strip()
-    if "```" in text:
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-    return json.loads(text.strip())
+    return parse_gemini_json(response.text)

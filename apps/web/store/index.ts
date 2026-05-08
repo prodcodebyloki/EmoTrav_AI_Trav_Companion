@@ -5,6 +5,78 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 export type Vibe = 'romantic' | 'adventurous' | 'healing' | 'chaotic' | 'social' | 'slow' | 'creative';
 export type EnergyLevel = 'low' | 'medium' | 'high';
 export type StreamStatus = 'idle' | 'streaming' | 'complete' | 'error';
+export type ExpType = 'food' | 'culture' | 'outdoor' | 'nightlife' | 'shopping' | 'relaxation' | 'transport';
+
+export interface Location {
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  neighborhood: string;
+}
+
+export interface Alternative {
+  id: string;
+  name: string;
+  reason: string;
+}
+
+export interface Experience {
+  id: string;
+  name: string;
+  type: ExpType;
+  location: Location;
+  time_start: string;
+  duration_minutes: number;
+  estimated_cost_usd: number;
+  energy_score: number;
+  vibe_tags: string[];
+  notes: string;
+  alternatives: Alternative[];
+}
+
+export interface DayPlan {
+  day_number: number;
+  emotional_theme: string;
+  energy_curve: number[];
+  location_zone: string;
+  transport_between: string;
+  anchor_count: number;
+  spontaneity_level: number;
+  experiences: Experience[];
+  estimated_spend: number;
+}
+
+export interface DailyBudget {
+  day_number: number;
+  accommodation_usd: number;
+  transport_usd: number;
+  food_usd: number;
+  experiences_usd: number;
+  misc_usd: number;
+  day_total_usd: number;
+  flag: 'on_track' | 'near_limit' | 'over_budget';
+}
+
+export interface BudgetSummary {
+  total_budget_usd: number;
+  days: number;
+  daily_breakdown: DailyBudget[];
+  category_totals: Record<string, number>;
+  grand_total_usd: number;
+  remaining_usd: number;
+  overall_flag: 'on_track' | 'near_limit' | 'over_budget';
+  local_currency_hint: string;
+  warnings: string[];
+}
+
+export interface Trip {
+  session_id: string;
+  destination_city: string;
+  days: DayPlan[];
+  budget: BudgetSummary;
+  generated_at: string;
+}
 
 export interface SoftInputs {
   vibe: Vibe | null;
@@ -24,21 +96,19 @@ export interface HardInputs {
 
 interface TripStore {
   session_id: string;
-  current_trip: any | null;
-  days: any[];
-  budget: any | null;
+  current_trip: Trip | null;
+  days: DayPlan[];
+  budget: BudgetSummary | null;
   soft_inputs: SoftInputs;
   hard_inputs: Partial<HardInputs>;
   stream_status: StreamStatus;
-  adaptation_log: any[];
 
   setSoftInput: <K extends keyof SoftInputs>(key: K, value: SoftInputs[K]) => void;
   setHardInput: <K extends keyof HardInputs>(key: K, value: HardInputs[K]) => void;
-  addDay: (day: any) => void;
-  setBudget: (budget: any) => void;
+  addDay: (day: DayPlan) => void;
+  setBudget: (budget: BudgetSummary) => void;
   setStreamStatus: (status: StreamStatus) => void;
-  setTrip: (trip: any) => void;
-  addAdaptation: (diff: any) => void;
+  setTrip: (trip: Trip) => void;
   reset: () => void;
 }
 
@@ -65,7 +135,6 @@ export const useTripStore = create<TripStore>()(
       soft_inputs: DEFAULT_SOFT,
       hard_inputs: { days: 4, group_size: 1, transport: 'any', budget_usd: 1000 },
       stream_status: 'idle',
-      adaptation_log: [],
 
       setSoftInput: (key, value) =>
         set((s) => ({ soft_inputs: { ...s.soft_inputs, [key]: value } })),
@@ -81,10 +150,7 @@ export const useTripStore = create<TripStore>()(
 
       setTrip: (trip) => set({ current_trip: trip, days: trip.days, budget: trip.budget }),
 
-      addAdaptation: (diff) =>
-        set((s) => ({ adaptation_log: [...s.adaptation_log, diff] })),
-
-      reset: () => set({ days: [], budget: null, current_trip: null, stream_status: 'idle', adaptation_log: [] }),
+      reset: () => set({ days: [], budget: null, current_trip: null, stream_status: 'idle' }),
     }),
     {
       name: 'emotrav_session',

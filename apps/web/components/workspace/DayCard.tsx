@@ -1,4 +1,5 @@
 'use client';
+import { DayPlan } from '@/store';
 import styles from './DayCard.module.css';
 
 const THEME_LABELS: Record<string, string> = {
@@ -11,7 +12,7 @@ const THEME_LABELS: Record<string, string> = {
 };
 
 interface Props {
-  day: any;
+  day: DayPlan;
 }
 
 export default function DayCard({ day }: Props) {
@@ -27,7 +28,7 @@ export default function DayCard({ day }: Props) {
 
       {day.energy_curve && (
         <div className={styles.curve}>
-          {day.energy_curve.map((v: number, i: number) => (
+          {day.energy_curve.map((v, i) => (
             <div
               key={i}
               className={styles.bar}
@@ -40,7 +41,7 @@ export default function DayCard({ day }: Props) {
 
       {day.experiences?.length > 0 && (
         <ul className={styles.experiences}>
-          {day.experiences.map((exp: any) => (
+          {day.experiences.map((exp) => (
             <li key={exp.id} className={styles.exp}>
               <span className={styles.expTime}>{exp.time_start}</span>
               <div className={styles.expBody}>

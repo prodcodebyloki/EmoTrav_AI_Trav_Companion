@@ -1,8 +1,5 @@
-import json
-from google import genai
-from config import GOOGLE_API_KEY, CITY_COST_PROFILES, VIBE_BLOCKS
-
-client = genai.Client(api_key=GOOGLE_API_KEY)
+from gemini import client, parse_gemini_json
+from config import CITY_COST_PROFILES, VIBE_BLOCKS
 
 async def populate_experiences(skeleton: dict, request) -> dict:
     hard = request.hard_inputs
@@ -48,17 +45,11 @@ Return ONLY a JSON array, no prose, no markdown:
 ]
 """
 
-    response = client.models.generate_content(
+    response = await client.aio.models.generate_content(
         model="gemini-2.5-flash-lite",
         contents=prompt,
     )
-    text = response.text.strip()
-    if "```" in text:
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-
-    experiences = json.loads(text.strip())
+    experiences = parse_gemini_json(response.text)
     estimated_spend = sum(e.get("estimated_cost_usd", 0) for e in experiences)
 
     return {

@@ -9,7 +9,7 @@ import styles from './workspace.module.css';
 
 export default function WorkspacePage() {
   const router = useRouter();
-  const { session_id, soft_inputs, hard_inputs, days, budget, stream_status, addDay, setBudget, setStreamStatus, setTrip } = useTripStore();
+  const { soft_inputs, hard_inputs, days, budget, stream_status, addDay, setBudget, setStreamStatus, setTrip } = useTripStore();
   const started = useRef(false);
   const totalDays = hard_inputs.days ?? 4;
   const nextDayNum = days.length + 1;

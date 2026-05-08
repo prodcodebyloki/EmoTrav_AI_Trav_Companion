@@ -1,8 +1,9 @@
 'use client';
+import { BudgetSummary } from '@/store';
 import styles from './BudgetPanel.module.css';
 
 interface Props {
-  budget: any;
+  budget: BudgetSummary;
 }
 
 const FLAG_COLOR: Record<string, string> = {
@@ -11,14 +12,16 @@ const FLAG_COLOR: Record<string, string> = {
   over_budget:'#D94F4F',
 };
 
+const CATEGORIES = [
+  { key: 'accommodation_usd', label: 'Stay' },
+  { key: 'transport_usd',     label: 'Transport' },
+  { key: 'food_usd',          label: 'Food' },
+  { key: 'experiences_usd',   label: 'Experiences' },
+  { key: 'misc_usd',          label: 'Misc' },
+];
+
 export default function BudgetPanel({ budget }: Props) {
-  const cats = [
-    { key: 'accommodation_usd', label: 'Stay' },
-    { key: 'transport_usd',     label: 'Transport' },
-    { key: 'food_usd',          label: 'Food' },
-    { key: 'experiences_usd',   label: 'Experiences' },
-    { key: 'misc_usd',          label: 'Misc' },
-  ];
+  const flagColor = FLAG_COLOR[budget.overall_flag];
 
   return (
     <div className={styles.panel}>
@@ -27,10 +30,7 @@ export default function BudgetPanel({ budget }: Props) {
       <div className={styles.totals}>
         <span className={styles.spent}>${budget.grand_total_usd?.toFixed(0)}</span>
         <span className={styles.of}>of ${budget.total_budget_usd}</span>
-        <span
-          className={styles.flag}
-          style={{ color: FLAG_COLOR[budget.overall_flag] }}
-        >
+        <span className={styles.flag} style={{ color: flagColor }}>
           {budget.overall_flag?.replace('_', ' ')}
         </span>
       </div>
@@ -40,13 +40,13 @@ export default function BudgetPanel({ budget }: Props) {
           className={styles.barFill}
           style={{
             width: `${Math.min(100, (budget.grand_total_usd / budget.total_budget_usd) * 100)}%`,
-            background: FLAG_COLOR[budget.overall_flag],
+            background: flagColor,
           }}
         />
       </div>
 
       <ul className={styles.cats}>
-        {cats.map(({ key, label }) => {
+        {CATEGORIES.map(({ key, label }) => {
           const val = budget.category_totals?.[key] ?? 0;
           const pct = Math.min(100, (val / budget.total_budget_usd) * 100);
           return (
@@ -67,7 +67,7 @@ export default function BudgetPanel({ budget }: Props) {
 
       {budget.warnings?.length > 0 && (
         <div className={styles.warnings}>
-          {budget.warnings.map((w: string, i: number) => (
+          {budget.warnings.map((w, i) => (
             <p key={i} className={styles.warning}>⚠ {w}</p>
           ))}
         </div>
