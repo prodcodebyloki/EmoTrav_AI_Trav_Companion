@@ -6,7 +6,10 @@ app = FastAPI(title="EmoTrav API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://emotrav-web-*.run.app"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://emotrav-web-620175114461.us-central1.run.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
