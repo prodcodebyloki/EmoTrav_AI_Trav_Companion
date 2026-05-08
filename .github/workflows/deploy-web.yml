@@ -8,7 +8,7 @@ on:
       - ".github/workflows/deploy-web.yml"
 
 env:
-  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  PROJECT_ID: loki-warm-up-challenge
   REGION: us-central1
   SERVICE: emotrav-web
 
@@ -24,8 +24,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - uses: google-github-actions/setup-gcloud@v2
 
@@ -36,7 +35,8 @@ jobs:
             --region $REGION \
             --project $PROJECT_ID \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_API_URL=${{ vars.API_URL }} \
+            --set-build-env-vars NEXT_PUBLIC_API_URL=https://emotrav-api-620175114461.us-central1.run.app \
+            --set-env-vars NEXT_PUBLIC_API_URL=https://emotrav-api-620175114461.us-central1.run.app \
             --min-instances 0 \
             --max-instances 5 \
             --memory 512Mi \
