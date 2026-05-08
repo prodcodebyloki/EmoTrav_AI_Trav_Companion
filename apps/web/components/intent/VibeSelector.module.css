@@ -1,0 +1,58 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: white;
+  border: 2px solid var(--color-stone);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  text-align: left;
+}
+
+.card:hover {
+  border-color: var(--color-dusk);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cardSelected {
+  border-color: var(--color-dusk);
+  background: #FFF8F5;
+  box-shadow: var(--shadow-glow-dusk);
+}
+
+/* Per-vibe accent */
+.card[data-vibe="romantic"].cardSelected    { border-color: var(--vibe-romantic); }
+.card[data-vibe="adventurous"].cardSelected { border-color: var(--vibe-adventure); }
+.card[data-vibe="healing"].cardSelected     { border-color: var(--vibe-healing); background: #F3F8F4; }
+.card[data-vibe="chaotic"].cardSelected     { border-color: var(--vibe-chaotic); background: #F8F5FF; }
+.card[data-vibe="social"].cardSelected      { border-color: var(--vibe-social); background: #FFFBF0; }
+.card[data-vibe="slow"].cardSelected        { border-color: var(--vibe-slow); background: #F2F3F8; }
+.card[data-vibe="creative"].cardSelected    { border-color: var(--vibe-creative); background: #FFF5FB; }
+
+.icon {
+  font-size: 1.5rem;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-body);
+  color: var(--color-charcoal);
+}
+
+.desc {
+  font-size: var(--text-micro);
+  color: var(--color-stone);
+  line-height: 1.4;
+}

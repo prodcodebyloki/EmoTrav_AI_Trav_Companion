@@ -360,19 +360,56 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ---
 
-## 9. Deployment (Simplest Path)
+## 9. Deployment
 
 ```
-Frontend → Vercel (zero config Next.js)
-Backend  → Google Cloud Run (Dockerfile, 1 command deploy)
+Frontend → Google Cloud Run (same platform as backend, no Vercel)
+Backend  → Google Cloud Run
+CI/CD    → GitHub Actions (no Docker required — Cloud Run source deploy)
+Secrets  → Google Secret Manager (injected as env vars at runtime)
+```
 
-gcloud run deploy nomad-flow-api \
+### Frontend — Cloud Run (Next.js)
+
+```bash
+gcloud run deploy emotrav-web \
+  --source apps/web \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars NEXT_PUBLIC_API_URL=https://emotrav-api-<hash>-uc.a.run.app
+```
+
+### Backend — Cloud Run (FastAPI)
+
+```bash
+gcloud run deploy emotrav-api \
   --source apps/api \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars GOOGLE_API_KEY=... \
-  --set-env-vars GOOGLE_MAPS_API_KEY=...
+  --set-secrets GOOGLE_API_KEY=emotrav-google-api-key:latest \
+  --set-secrets GOOGLE_MAPS_API_KEY=emotrav-maps-api-key:latest
 ```
+
+> Cloud Run `--source` flag builds and deploys directly from source — no Dockerfile needed.
+> Google Cloud Buildpacks auto-detects Node.js (web) and Python (api).
+
+### GitHub Actions CI/CD
+
+Two workflows in `.github/workflows/`:
+
+**`deploy-api.yml`** — triggers on push to `main`, path `apps/api/**`
+```yaml
+- uses: google-github-actions/auth@v2
+- run: gcloud run deploy emotrav-api --source apps/api ...
+```
+
+**`deploy-web.yml`** — triggers on push to `main`, path `apps/web/**`
+```yaml
+- uses: google-github-actions/auth@v2
+- run: gcloud run deploy emotrav-web --source apps/web ...
+```
+
+Auth uses Workload Identity Federation — no service account key stored in GitHub.
 
 ---
 
@@ -386,7 +423,7 @@ gcloud run deploy nomad-flow-api \
 | **S4** | JourneyTimeline + EnergyCurve + BudgetFlow UI components |
 | **S5** | AdaptationAgent + real-time replanning triggers |
 | **S6** | AdaptationAlerts UI + MapPanel + polish |
-| **S7** | Cloud Run deploy + Vercel deploy + end-to-end test |
+| **S7** | GitHub Actions CI/CD + Cloud Run deploy (both services) + end-to-end test |
 
 ---
 
@@ -400,3 +437,6 @@ gcloud run deploy nomad-flow-api \
 | Gemini Flash over Pro | Pro is 10x slower for streaming; Flash quality is sufficient for itinerary text |
 | react-simple-maps over Google Maps JS | Lighter bundle; we only need area visualization, not full map interaction |
 | Monorepo (Turborepo) | Shared type contracts between frontend + backend TS types |
+| Cloud Run over Vercel (frontend) | Single platform (GCP) for both services — simpler secrets, billing, and IAM |
+| No Docker | Cloud Run source deploy with Buildpacks removes Dockerfile maintenance overhead |
+| GitHub Actions over Cloud Build | Repo already on GitHub; keeps CI/CD in one place, Workload Identity = no stored keys |

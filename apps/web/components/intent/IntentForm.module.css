@@ -1,0 +1,208 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-sand);
+}
+
+.header {
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.logoIcon {
+  width: 32px;
+  height: 32px;
+  background: conic-gradient(from 180deg, #E8805A 0%, #6B8F71 50%, #2D3561 100%);
+  border-radius: 50% 50% 50% 10%;
+  display: block;
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-charcoal);
+  letter-spacing: -0.02em;
+}
+
+.logoText em {
+  font-style: normal;
+  color: var(--color-dusk);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-stone);
+  font-size: var(--text-small);
+}
+
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--space-6) var(--space-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  color: var(--color-charcoal);
+  font-weight: 600;
+}
+
+.energyRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.energyBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: white;
+  border: 2px solid var(--color-stone);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.energyBtn:hover {
+  border-color: var(--color-dusk);
+}
+
+.energyBtnActive {
+  border-color: var(--color-dusk);
+  background: #FFF8F5;
+}
+
+.energyLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-body);
+}
+
+.energyDesc {
+  font-size: var(--text-micro);
+  color: var(--color-stone);
+}
+
+.cityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-2);
+}
+
+.cityBtn {
+  padding: var(--space-3) var(--space-4);
+  background: white;
+  border: 2px solid var(--color-stone);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--color-earth);
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.cityBtn:hover {
+  border-color: var(--color-dusk);
+}
+
+.cityBtnActive {
+  border-color: var(--color-dusk);
+  background: #FFF8F5;
+  color: var(--color-dusk);
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-earth);
+}
+
+.input {
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-stone);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-charcoal);
+  background: white;
+  outline: none;
+  transition: border-color var(--duration-fast);
+}
+
+.input:focus {
+  border-color: var(--color-dusk);
+}
+
+.spontaneityBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-dusk);
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-micro);
+  color: var(--color-stone);
+}
+
+.generateBtn {
+  align-self: flex-start;
+  padding: var(--space-4) var(--space-7);
+  background: var(--color-dusk);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-spring);
+}
+
+.generateBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-dusk);
+}
+
+.generateBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

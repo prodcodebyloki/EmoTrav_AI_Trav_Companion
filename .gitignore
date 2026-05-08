@@ -1,0 +1,25 @@
+# env
+.env
+.env.local
+.env.*.local
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+.pytest_cache/
+
+# node
+node_modules/
+.next/
+.turbo/
+out/
+build/
+
+# misc
+.DS_Store
+*.log
+.claude/

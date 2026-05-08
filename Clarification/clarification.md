@@ -186,9 +186,20 @@ Decision needed before Sprint 1 CSS setup.
 
 | Key / Config | Where | Used for |
 |---|---|---|
-| GCP Project ID | GCP Console | Cloud Run deployment target |
-| Google Cloud Service Account key | GCP IAM → Service Accounts | `gcloud` CLI auth for CI/CD |
-| Vercel token (optional) | vercel.com → Settings → Tokens | Automated frontend deploys |
+| **GCP Project ID** | GCP Console → project selector | Cloud Run deploy target for both web + api |
+| **Workload Identity Pool + Provider** | GCP IAM → Workload Identity Federation | GitHub Actions → GCP auth without stored keys |
+| **GitHub repo connected to GCP** | GCP IAM → grant `roles/run.admin` + `roles/storage.admin` to WIF service account | CI/CD push on merge to main |
+| **Google Secret Manager secrets** | GCP → Secret Manager | Store `GOOGLE_API_KEY` and `GOOGLE_MAPS_API_KEY` — injected at Cloud Run deploy time |
+
+> No Vercel. No Docker. No service account JSON stored in GitHub. Workload Identity Federation handles auth.
+
+Setup order for Sprint 7:
+1. Create GCP project
+2. Enable APIs: Cloud Run, Cloud Build, Secret Manager, IAM
+3. Store both API keys in Secret Manager
+4. Set up Workload Identity Federation for GitHub repo
+5. Add `deploy-api.yml` + `deploy-web.yml` to `.github/workflows/`
+6. Push to main → auto-deploys both services
 
 ---
 

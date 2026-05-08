@@ -1,0 +1,114 @@
+.panel {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-charcoal);
+}
+
+.totals {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.spent {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-charcoal);
+}
+
+.of {
+  font-size: var(--text-small);
+  color: var(--color-stone);
+}
+
+.flag {
+  font-size: var(--text-micro);
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-left: auto;
+}
+
+.bar {
+  height: 6px;
+  background: var(--color-sand);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-smooth);
+}
+
+.cats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cat {
+  display: grid;
+  grid-template-columns: 90px 1fr 48px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.catLabel {
+  font-size: var(--text-small);
+  color: var(--color-earth);
+}
+
+.catBar {
+  height: 4px;
+  background: var(--color-sand);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.catBarFill {
+  height: 100%;
+  background: var(--color-dusk);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-smooth);
+}
+
+.catVal {
+  font-size: var(--text-micro);
+  color: var(--color-stone);
+  text-align: right;
+}
+
+.hint {
+  font-size: var(--text-micro);
+  color: var(--color-stone);
+  text-align: center;
+  font-style: italic;
+}
+
+.warnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.warning {
+  font-size: var(--text-small);
+  color: var(--color-warning);
+  background: #FFFBF0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}
